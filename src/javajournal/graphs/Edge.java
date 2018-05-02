@@ -2,17 +2,17 @@ package javajournal.graphs;
 
 public class Edge<T> {
 
-    private Vertex<T> from;
-    private Vertex<T> to;
+    private Node<T> from;
+    private Node<T> to;
     private int weight;
 
-    public Edge(Vertex<T> from, Vertex<T> to, int weight) {
+    public Edge(Node<T> from, Node<T> to, int weight) {
         this.from = from;
         this.to = to;
         this.weight = weight;
     }
 
-    public Vertex<T> dest() {
+    public Node<T> dest() {
         return to;
     }
 

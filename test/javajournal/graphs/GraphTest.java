@@ -1,6 +1,10 @@
 package javajournal.graphs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,6 +31,28 @@ public class GraphTest {
 
         public void setId(Integer id) {
             this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return id.toString();
+        }
+
+    }
+
+    private class Expr {
+
+        private String lvalue;
+        private String rvalue;
+
+        public Expr(String lvalue, String rvalue) {
+            this.lvalue = lvalue;
+            this.rvalue = rvalue;
+        }
+
+        @Override
+        public String toString() {
+            return lvalue + " = " + rvalue;
         }
 
     }
@@ -82,7 +108,6 @@ public class GraphTest {
         assertEquals(true, result);
     }
 
-    
     @Test
     public void testRemoveVertex() throws Exception {
         System.out.println("removeVertex");
@@ -94,74 +119,120 @@ public class GraphTest {
         assertEquals(false, graph.contains(a));
     }
 
-    /**
-     * Test of addEdge method, of class Graph.
-     */
-    //@Test
+    @Test
     public void testAddEdge() throws Exception {
         System.out.println("addEdge");
-        Object from = null;
-        Object to = null;
+        Entity from = new Entity(1);
+        Entity to = new Entity(2);
         int weight = 0;
-        Graph instance = new OrientedGraph();
-        instance.addEdge(from, to, weight);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addVertex(from);
+        graph.addVertex(to);
+        graph.addEdge(from, to, weight);
+        assertEquals(true, graph.areAdjacent(from, to));
     }
 
-    /**
-     * Test of removeEdge method, of class Graph.
-     */
-    //@Test
+    @Test
     public void testRemoveEdge() throws Exception {
         System.out.println("removeEdge");
-        Object from = null;
-        Object to = null;
-        Graph instance = new OrientedGraph();
-        instance.removeEdge(from, to);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        Entity from = new Entity(1);
+        Entity to = new Entity(2);
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addVertex(from);
+        graph.addVertex(to);
+        graph.addEdge(from, to, 0);
+        graph.removeEdge(from, to);
     }
 
-    /**
-     * Test of getNeighborsFor method, of class Graph.
-     */
-    //@Test
+    @Test
     public void testGetNeighborsFor() throws Exception {
         System.out.println("getNeighborsFor");
-        Object vertex = null;
-        Graph instance = new OrientedGraph();
-        Collection expResult = null;
-        Collection result = instance.getNeighborsFor(vertex);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        Entity a = new Entity(1);
+        Entity b = new Entity(2);
+        Entity c = new Entity(3);
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addEdge(a, b, 0);
+        graph.addEdge(a, c, 0);
+        Collection<Entity> neighbors = graph.getNeighborsFor(a);
+        boolean containsAll = neighbors.containsAll(Arrays.asList(b, c));
+        assertEquals(true, containsAll);
     }
 
-    /**
-     * Test of depthSearch method, of class Graph.
-     */
-    //@Test
+    @Test
     public void testDepthSearch() throws Exception {
         System.out.println("depthSearch");
-        Object start = null;
-        Graph instance = new OrientedGraph();
-        instance.depthSearch(start);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Entity e0 = new Entity(0);
+        Entity e1 = new Entity(1);
+        Entity e2 = new Entity(2);
+        Entity e3 = new Entity(3);
+
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addVertex(e0);
+        graph.addVertex(e1);
+        graph.addVertex(e2);
+        graph.addVertex(e3);
+
+        graph.addEdge(e0, e1, 0);
+        graph.addEdge(e0, e2, 0);
+        graph.addEdge(e1, e2, 0);
+        graph.addEdge(e2, e0, 0);
+        graph.addEdge(e2, e3, 0);
+        graph.addEdge(e3, e3, 0);
+        List<Entity> list = graph.depthSearch(e2);
+        //expected  2 0 1 3
+        boolean eq = list.equals(Arrays.asList(e2, e0, e1, e3));
+        assertEquals(true, eq);
     }
 
-    /**
-     * Test of breathSearch method, of class Graph.
-     */
-    //@Test
+    @Test
     public void testBreathSearch() throws Exception {
         System.out.println("breathSearch");
-        Object start = null;
-        Graph instance = new OrientedGraph();
-        instance.breathSearch(start);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Entity e0 = new Entity(0);
+        Entity e1 = new Entity(1);
+        Entity e2 = new Entity(2);
+        Entity e3 = new Entity(3);
+
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addVertex(e0);
+        graph.addVertex(e1);
+        graph.addVertex(e2);
+        graph.addVertex(e3);
+
+        graph.addEdge(e0, e1, 0);
+        graph.addEdge(e0, e2, 0);
+        graph.addEdge(e1, e2, 0);
+        graph.addEdge(e2, e0, 0);
+        graph.addEdge(e2, e3, 0);
+        graph.addEdge(e3, e3, 0);
+
+        List<Entity> list = graph.breathSearch(e2);
+        //expected 2 0 3 1
+        boolean eq = list.equals(Arrays.asList(e2, e0, e3, e1));
+        assertEquals(true, eq);
+
     }
 
+    @Test
+    public void testTopologicalSort() throws Exception {
+        System.out.println("topologicalSort");
+        Expr e0 = new Expr("B1", "A1");
+        Expr e1 = new Expr("A1", "10");
+        Expr e2 = new Expr("A2", "A1 + 2");
+        Expr e3 = new Expr("A3", "A1 + A2");
+        Graph<Expr> graph = new OrientedGraph<>();
+        graph.addVertex(e0);
+        graph.addVertex(e1);
+        graph.addVertex(e2);
+        graph.addVertex(e3);
+
+        graph.addEdge(e1, e2, 0);
+        graph.addEdge(e1, e0, 0);
+        graph.addEdge(e1, e3, 0);
+
+        graph.addEdge(e2, e3, 0);
+        graph.topologicalSort();
+    }
 }

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Vertex<T> implements Iterable<Vertex<T>> {
+public class Node<T> implements Iterable<Node<T>> {
 
     private T info;
     private ArrayList<Edge<T>> neighbors;
 
-    public Vertex(T info) {
+    public Node(T info) {
         this.info = info;
         neighbors = new ArrayList<Edge<T>>();
     }
 
-    private Edge<T> getEdgeTo(Vertex<T> target) {
+    private Edge<T> getEdgeTo(Node<T> target) {
         Iterator<Edge<T>> edges = neighbors.iterator();
 
         while (edges.hasNext()) {
@@ -47,7 +47,7 @@ public class Vertex<T> implements Iterable<Vertex<T>> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Vertex<T> other = (Vertex<T>) obj;
+        Node<T> other = (Node<T>) obj;
         if (info == null) {
             if (other.info != null) {
                 return false;
@@ -59,8 +59,8 @@ public class Vertex<T> implements Iterable<Vertex<T>> {
     }
 
     @Override
-    public Iterator<Vertex<T>> iterator() {
-        return new VertexIterator<T>(neighbors);
+    public Iterator<Node<T>> iterator() {
+        return new NodeIterator<T>(neighbors);
     }
 
     public void addEdge(Edge<T> edge) {
@@ -71,8 +71,8 @@ public class Vertex<T> implements Iterable<Vertex<T>> {
         }
     }
 
-    public boolean hasNeighbor(Vertex<T> neighbor) {
-        Iterator<Vertex<T>> iterator = iterator();
+    public boolean hasNeighbor(Node<T> neighbor) {
+        Iterator<Node<T>> iterator = iterator();
 
         while (iterator.hasNext()) {
             if (iterator.next().equals(neighbor)) {
@@ -83,14 +83,14 @@ public class Vertex<T> implements Iterable<Vertex<T>> {
         return false;
     }
 
-    public void removeEdgeTo(Vertex<T> neighbor) {
+    public void removeEdgeTo(Node<T> neighbor) {
         Edge<T> edge = getEdgeTo(neighbor);
         neighbors.remove(edge);
     }
 
     public List<T> getNeighbors() {
         List<T> neighbors = new ArrayList<>();
-        Iterator<Vertex<T>> iterator = iterator();
+        Iterator<Node<T>> iterator = iterator();
 
         while (iterator.hasNext()) {
             neighbors.add(iterator.next().value());

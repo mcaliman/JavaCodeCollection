@@ -1,6 +1,8 @@
 package javajournal.graphs;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
 
 public interface Graph<T> {
 
@@ -18,7 +20,9 @@ public interface Graph<T> {
 
     public Collection<T> getNeighborsFor(T vertex) throws Exception;
 
-    public void depthSearch(T start) throws Exception;
+    public List<T> depthSearch(T start) throws Exception;
 
-    public void breathSearch(T start) throws Exception;
+    public  List<T> breathSearch(T start) throws Exception;
+    
+    public void topologicalSort() throws NoSuchNodeException;
 }
