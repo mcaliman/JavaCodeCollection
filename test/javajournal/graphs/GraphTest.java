@@ -215,24 +215,38 @@ public class GraphTest {
 
     }
 
+    //FIX!
     @Test
     public void testTopologicalSort() throws Exception {
         System.out.println("topologicalSort");
-        Expr e0 = new Expr("B1", "A1");
-        Expr e1 = new Expr("A1", "10");
-        Expr e2 = new Expr("A2", "A1 + 2");
-        Expr e3 = new Expr("A3", "A1 + A2");
-        Graph<Expr> graph = new OrientedGraph<>();
+        Entity e0 = new Entity(0);
+        Entity e1 = new Entity(1);
+        Entity e2 = new Entity(2);
+        Entity e3 = new Entity(3);
+        Entity e4 = new Entity(4);
+        Entity e5 = new Entity(5);
+        Graph<Entity> graph = new OrientedGraph<>();
         graph.addVertex(e0);
         graph.addVertex(e1);
         graph.addVertex(e2);
         graph.addVertex(e3);
+        graph.addVertex(e4);
+        graph.addVertex(e5);
 
-        graph.addEdge(e1, e2, 0);
-        graph.addEdge(e1, e0, 0);
-        graph.addEdge(e1, e3, 0);
-
+        graph.addEdge(e5, e2, 0);
+        graph.addEdge(e5, e0, 0);
+        graph.addEdge(e4, e0, 0);
+        graph.addEdge(e4, e1, 0);
         graph.addEdge(e2, e3, 0);
-        graph.topologicalSort();
+        graph.addEdge(e3, e1, 0);
+
+        //Following is a Topological Sort of the given graph 5 4 2 3 1 0
+        List<Entity> list = graph.topologicalSort();
+        for (Entity entity : list) {
+            System.out.print(entity.toString()+" > ");
+        }
+        
+        boolean eq = list.equals(Arrays.asList(e5, e4, e2, e3, e1, e0));
+        assertEquals(true, eq);
     }
 }

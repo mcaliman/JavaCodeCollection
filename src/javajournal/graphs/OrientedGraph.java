@@ -108,7 +108,7 @@ public class OrientedGraph<T> implements Graph<T> {
         Stack<T> stack = new Stack<>();
         stack.push(start);
         elements.add(start);
-        
+
         while (!stack.empty()) {
             T current = stack.peek();
             T neighbor = null;
@@ -123,7 +123,7 @@ public class OrientedGraph<T> implements Graph<T> {
 
             if (neighbor != null && !visited.contains(neighbor)) {
                 visited.add(neighbor);
-                
+
                 elements.add(neighbor);
                 stack.push(neighbor);
             } else {
@@ -164,60 +164,51 @@ public class OrientedGraph<T> implements Graph<T> {
         return elements;
     }
 
-    public void topologicalSort() throws NoSuchNodeException {
+    @Override
+    public List<T> topologicalSort() throws NoSuchNodeException {
         Iterator<T> iterator = this.graph.keySet().iterator();
         Collection<T> visited = new ArrayList<>();
+        List<T> elements = new ArrayList<>();
+
+        Stack<T> stack = new Stack<>();
 
         while (iterator.hasNext()) {
             T next = iterator.next();
             //visited.add(next);
             //ordered.add(next);
             if (!visited.contains(next)) {
-                depthSearch(next, visited);
+                topologicalSortUtil(next, visited, stack);
             }
         }
 
-        System.out.println("size " + visited.size());
-
-        Collections.reverse((List<?>) visited);
-
-        for (T t : visited) {
-            System.out.println(t.toString());
+        while (!stack.isEmpty()) {
+            T el = stack.pop();
+            elements.add(el);
+            System.out.println("topsearch " + el + " ");
         }
 
+        return elements;
     }
 
-    public void _depthSearch(T start, Collection<T> visited) throws NoSuchNodeException {
+    void topologicalSortUtil(T next, Collection<T> visited, Stack stack) throws NoSuchNodeException {
+        // Mark the current node as visited.
 
-    }
+        visited.add(next);
+        T i;
 
-    public void depthSearch(T start, Collection<T> visited) throws NoSuchNodeException {
-
-        Stack<T> stack = new Stack<>();
-        stack.push(start);
-
-        System.out.println(start);
-        while (!stack.empty()) {
-            T current = stack.peek();
-            T neighbor = null;
-            Iterator<T> iterator = getNeighborsFor(current).iterator();
-
-            while (iterator.hasNext()) {
-                neighbor = iterator.next();
-                if (!visited.contains(neighbor)) {
-                    break;
-                }
-            }
-
-            if (neighbor != null && !visited.contains(neighbor)) {
-                visited.add(neighbor);
-                System.out.println(neighbor);
-
-                stack.push(neighbor);
-            } else {
-                stack.pop();
+        // Recur for all the vertices adjacent to this
+        // vertex
+        List<T> list = this.getNeighborsFor(next);
+        Iterator<T> it = list.iterator();
+        while (it.hasNext()) {
+            i = it.next();
+            if (!visited.contains(i)) {
+                topologicalSortUtil(i, visited, stack);
             }
         }
+
+        // Push current vertex to stack which stores result
+        stack.push(next);
     }
 
 }

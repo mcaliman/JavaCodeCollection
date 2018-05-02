@@ -24,5 +24,5 @@ public interface Graph<T> {
 
     public  List<T> breathSearch(T start) throws Exception;
     
-    public void topologicalSort() throws NoSuchNodeException;
+    public List<T> topologicalSort() throws NoSuchNodeException;
 }
