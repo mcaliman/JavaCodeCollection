@@ -63,7 +63,7 @@ public class GraphTest {
     public void testContains() {
         System.out.println("contains");
         Entity item = new Entity(1);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(item);
         boolean result = graph.contains(item);
         assertEquals(true, result);
@@ -73,7 +73,7 @@ public class GraphTest {
     public void testAddVertex() {
         System.out.println("addVertex");
         Entity item = new Entity(1);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(item);
         assertEquals(true, graph.contains(item));
     }
@@ -83,7 +83,7 @@ public class GraphTest {
         System.out.println("areAdjacent");
         Entity a = new Entity(1);
         Entity b = new Entity(2);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(a);
         graph.addNode(b);
         graph.addEdge(a, b);
@@ -95,7 +95,7 @@ public class GraphTest {
     public void testRemoveVertex() throws Exception {
         System.out.println("removeVertex");
         Entity a = new Entity(1);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(a);
         assertEquals(true, graph.contains(a));
         graph.removeNode(a);
@@ -108,7 +108,7 @@ public class GraphTest {
         Entity a = new Entity(1);
         Entity b = new Entity(2);
         Entity c = new Entity(3);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(a);
         graph.addNode(b);
         graph.addNode(c);
@@ -134,7 +134,7 @@ public class GraphTest {
         Entity e1 = new Entity(1);
         Entity e2 = new Entity(2);
         Entity e3 = new Entity(3);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(e0);
         graph.addNode(e1);
         graph.addNode(e2);
@@ -160,7 +160,7 @@ public class GraphTest {
         Entity e1 = new Entity(1);
         Entity e2 = new Entity(2);
         Entity e3 = new Entity(3);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(e0);
         graph.addNode(e1);
         graph.addNode(e2);
@@ -185,7 +185,7 @@ public class GraphTest {
         System.out.println("addEdge");
         Entity from = new Entity(1);
         Entity to = new Entity(2);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(from);
         graph.addNode(to);
         graph.addEdge(from, to);
@@ -197,7 +197,7 @@ public class GraphTest {
         System.out.println("removeEdge");
         Entity from = new Entity(1);
         Entity to = new Entity(2);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(from);
         graph.addNode(to);
         graph.addEdge(from, to);
@@ -210,7 +210,7 @@ public class GraphTest {
         Entity a = new Entity(1);
         Entity b = new Entity(2);
         Entity c = new Entity(3);
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(a);
         graph.addNode(b);
         graph.addNode(c);
@@ -229,7 +229,7 @@ public class GraphTest {
         Entity e2 = new Entity(2);
         Entity e3 = new Entity(3);
 
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(e0);
         graph.addNode(e1);
         graph.addNode(e2);
@@ -255,7 +255,7 @@ public class GraphTest {
         Entity e2 = new Entity(2);
         Entity e3 = new Entity(3);
 
-        Graph<Entity> graph = new OrientedGraph<>();
+        Graph<Entity> graph = new DirectedGraph<>();
         graph.addNode(e0);
         graph.addNode(e1);
         graph.addNode(e2);
@@ -300,7 +300,7 @@ public class GraphTest {
         Expr A1 = new Expr("A1", "10");
         Expr A2 = new Expr("A2", "A1 + 2");
         Expr A3 = new Expr("A3", "A1 + A2");
-        Graph<Expr> graph = new OrientedGraph<>();
+        Graph<Expr> graph = new DirectedGraph<>();
         graph.addNode(B1);
         graph.addNode(A1);
         graph.addNode(A2);
@@ -313,7 +313,7 @@ public class GraphTest {
         graph.addEdge(A2, A3);
 
         //Topological Sort of the given graph 
-        List<Expr> list = graph.kahnTopSort();
+        List<Expr> list = graph.topologicalSort();
         for (Expr expr : list) {
             System.out.println(expr.toString());
         }
