@@ -2,27 +2,26 @@ package javajournal.graphs;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Queue;
 
 public interface Graph<T> {
 
     public boolean contains(T item);
 
-    public void addVertex(T vertex);
+    public void addNode(T item);
 
-    public boolean areAdjacent(T a, T b) throws Exception;
+    public boolean areAdjacent(T a, T b) throws NoSuchNodeException;
 
-    public void removeVertex(T vertex) throws Exception;
+    public void removeNode(T item) throws NoSuchNodeException;
 
-    public void addEdge(T from, T to, int weight) throws Exception;
+    public void addEdge(T from, T to, int weight) throws NoSuchNodeException;
 
-    public void removeEdge(T from, T to) throws Exception;
+    public void removeEdge(T from, T to) throws NoSuchNodeException;
 
-    public Collection<T> getNeighborsFor(T vertex) throws Exception;
+    public Collection<T> getNeighbors(T item) throws NoSuchNodeException;
 
-    public List<T> depthSearch(T start) throws Exception;
+    public List<T> depthSearch(T start) throws NoSuchNodeException;
 
-    public  List<T> breathSearch(T start) throws Exception;
-    
+    public List<T> breathSearch(T start) throws NoSuchNodeException;
+
     public List<T> topologicalSort() throws NoSuchNodeException;
 }

@@ -6,24 +6,22 @@ import java.util.List;
 
 public class Node<T> implements Iterable<Node<T>> {
 
-    private T info;
-    private ArrayList<Edge<T>> neighbors;
+    private T data;
+    private List<Edge<T>> neighbors;
 
-    public Node(T info) {
-        this.info = info;
-        neighbors = new ArrayList<Edge<T>>();
+    public Node(T data) {
+        this.data = data;
+        this.neighbors = new ArrayList<Edge<T>>();
     }
 
     private Edge<T> getEdgeTo(Node<T> target) {
         Iterator<Edge<T>> edges = neighbors.iterator();
-
         while (edges.hasNext()) {
             Edge<T> current = edges.next();
-            if (current.dest().equals(target)) {
+            if (current.getTarget().equals(target)) {
                 return current;
             }
         }
-
         return null;
     }
 
@@ -31,7 +29,7 @@ public class Node<T> implements Iterable<Node<T>> {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((info == null) ? 0 : info.hashCode());
+        result = prime * result + ((data == null) ? 0 : data.hashCode());
         return result;
     }
 
@@ -48,11 +46,11 @@ public class Node<T> implements Iterable<Node<T>> {
             return false;
         }
         Node<T> other = (Node<T>) obj;
-        if (info == null) {
-            if (other.info != null) {
+        if (data == null) {
+            if (other.data != null) {
                 return false;
             }
-        } else if (!info.equals(other.info)) {
+        } else if (!data.equals(other.data)) {
             return false;
         }
         return true;
@@ -60,48 +58,41 @@ public class Node<T> implements Iterable<Node<T>> {
 
     @Override
     public Iterator<Node<T>> iterator() {
-        return new NodeIterator<T>(neighbors);
+        return new NodeIterator<>(neighbors);
     }
 
     public void addEdge(Edge<T> edge) {
-        if (neighbors.contains(edge)) {
-            return;
-        } else {
+        if (!neighbors.contains(edge)) {
             neighbors.add(edge);
-        }
+        } 
     }
 
     public boolean hasNeighbor(Node<T> neighbor) {
-        Iterator<Node<T>> iterator = iterator();
-
-        while (iterator.hasNext()) {
-            if (iterator.next().equals(neighbor)) {
+        Iterator<Node<T>> it = iterator();
+        while (it.hasNext()) {
+            Node node = it.next();
+            if (node.equals(neighbor)) {
                 return true;
             }
         }
-
         return false;
     }
-    
-    
-
+        
     public void removeEdgeTo(Node<T> neighbor) {
         Edge<T> edge = getEdgeTo(neighbor);
         neighbors.remove(edge);
     }
 
     public List<T> getNeighbors() {
-        List<T> neighbors = new ArrayList<>();
-        Iterator<Node<T>> iterator = iterator();
-
-        while (iterator.hasNext()) {
-            neighbors.add(iterator.next().value());
+        List<T> neighborsList = new ArrayList<>();
+        Iterator<Node<T>> it = iterator();
+        while (it.hasNext()) {
+            neighborsList.add(it.next().value());
         }
-
-        return neighbors;
+        return neighborsList;
     }
 
     public T value() {
-        return info;
+        return data;
     }
 }

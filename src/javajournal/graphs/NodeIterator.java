@@ -18,6 +18,6 @@ public class NodeIterator<T> implements Iterator<Node<T>> {
 
     @Override
     public Node<T> next() {
-        return iterator.next().dest();
+        return iterator.next().getTarget();
     }
 }
