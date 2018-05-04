@@ -20,7 +20,7 @@ public interface Graph<T> {
 
     public List<Edge<T>> outgoingEdges(Node v);
 
-    public void addEdge(T from, T to, int weight) throws NoSuchNodeException;
+    public void addEdge(T from, T to) throws NoSuchNodeException;
 
     public void removeEdge(T from, T to) throws NoSuchNodeException;
 

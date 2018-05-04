@@ -4,12 +4,10 @@ public class Edge<T> {
 
     private Node<T> source;
     private Node<T> target;
-    private int weight;
 
-    public Edge(Node<T> source, Node<T> target, int weight) {
+    public Edge(Node<T> source, Node<T> target) {
         this.source = source;
         this.target = target;
-        this.weight = weight;
     }
 
     public Node<T> getSource() {
@@ -20,17 +18,12 @@ public class Edge<T> {
         return target;
     }
 
-    public int getWeight() {
-        return weight;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((source == null) ? 0 : source.hashCode());
         result = prime * result + ((target == null) ? 0 : target.hashCode());
-        result = prime * result + weight;
         return result;
     }
 
@@ -61,7 +54,7 @@ public class Edge<T> {
         } else if (!target.equals(edge.target)) {
             return false;
         }
-        return weight == edge.weight;
+        return true;
     }
 
     @Override

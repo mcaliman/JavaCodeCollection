@@ -86,7 +86,7 @@ public class GraphTest {
         Graph<Entity> graph = new OrientedGraph<>();
         graph.addNode(a);
         graph.addNode(b);
-        graph.addEdge(a, b, 0);
+        graph.addEdge(a, b);
         boolean result = graph.areAdjacent(a, b);
         assertEquals(true, result);
     }
@@ -112,15 +112,15 @@ public class GraphTest {
         graph.addNode(a);
         graph.addNode(b);
         graph.addNode(c);
-        graph.addEdge(a, b, 0);
-        graph.addEdge(a, c, 0);
+        graph.addEdge(a, b);
+        graph.addEdge(a, c);
         List<Edge<Entity>> edges = graph.edges();
         for (Edge<Entity> edge : edges) {
             System.out.println(edge);
         }
         boolean containsAll = edges.containsAll(Arrays.asList(
-                new Edge<Entity>(new Node(a), new Node(b), 0),
-                new Edge<Entity>(new Node(a), new Node(c), 0)
+                new Edge<Entity>(new Node(a), new Node(b)),
+                new Edge<Entity>(new Node(a), new Node(c))
         )
         );
         assertEquals(true, containsAll);
@@ -139,15 +139,15 @@ public class GraphTest {
         graph.addNode(e1);
         graph.addNode(e2);
         graph.addNode(e3);
-        graph.addEdge(e1, e2, 0);
-        graph.addEdge(e1, e3, 0);
-        graph.addEdge(e0, e1, 0);
+        graph.addEdge(e1, e2);
+        graph.addEdge(e1, e3);
+        graph.addEdge(e0, e1);
         List<Edge<Entity>> edges = graph.incomingEdges(new Node(e1));
         for (Edge<Entity> edge : edges) {
             System.out.println(edge);
         }
         boolean containsAll = edges.containsAll(Arrays.asList(
-                new Edge<Entity>(new Node(e0), new Node(e1), 0)
+                new Edge<Entity>(new Node(e0), new Node(e1))
         )
         );
         assertEquals(true, containsAll);
@@ -165,15 +165,16 @@ public class GraphTest {
         graph.addNode(e1);
         graph.addNode(e2);
         graph.addNode(e3);
-        graph.addEdge(e1, e2, 0);
-        graph.addEdge(e1, e3, 0);
-        graph.addEdge(e0, e1, 0);
+        graph.addEdge(e1, e2);
+        graph.addEdge(e1, e3);
+        graph.addEdge(e0, e1);
         List<Edge<Entity>> edges = graph.outgoingEdges(new Node(e1));
         for (Edge<Entity> edge : edges) {
             System.out.println(edge);
         }
-        boolean containsAll = edges.containsAll(Arrays.asList(new Edge<Entity>(new Node(e1), new Node(e2), 0),
-                new Edge<Entity>(new Node(e1), new Node(e3), 0)
+        boolean containsAll = edges.containsAll(Arrays.asList(
+                new Edge<Entity>(new Node(e1), new Node(e2)),
+                new Edge<Entity>(new Node(e1), new Node(e3))
         )
         );
         assertEquals(true, containsAll);
@@ -184,11 +185,10 @@ public class GraphTest {
         System.out.println("addEdge");
         Entity from = new Entity(1);
         Entity to = new Entity(2);
-        int weight = 0;
         Graph<Entity> graph = new OrientedGraph<>();
         graph.addNode(from);
         graph.addNode(to);
-        graph.addEdge(from, to, weight);
+        graph.addEdge(from, to);
         assertEquals(true, graph.areAdjacent(from, to));
     }
 
@@ -200,7 +200,7 @@ public class GraphTest {
         Graph<Entity> graph = new OrientedGraph<>();
         graph.addNode(from);
         graph.addNode(to);
-        graph.addEdge(from, to, 0);
+        graph.addEdge(from, to);
         graph.removeEdge(from, to);
     }
 
@@ -214,8 +214,8 @@ public class GraphTest {
         graph.addNode(a);
         graph.addNode(b);
         graph.addNode(c);
-        graph.addEdge(a, b, 0);
-        graph.addEdge(a, c, 0);
+        graph.addEdge(a, b);
+        graph.addEdge(a, c);
         Collection<Entity> neighbors = graph.getNeighbors(a);
         boolean containsAll = neighbors.containsAll(Arrays.asList(b, c));
         assertEquals(true, containsAll);
@@ -235,12 +235,12 @@ public class GraphTest {
         graph.addNode(e2);
         graph.addNode(e3);
 
-        graph.addEdge(e0, e1, 0);
-        graph.addEdge(e0, e2, 0);
-        graph.addEdge(e1, e2, 0);
-        graph.addEdge(e2, e0, 0);
-        graph.addEdge(e2, e3, 0);
-        graph.addEdge(e3, e3, 0);
+        graph.addEdge(e0, e1);
+        graph.addEdge(e0, e2);
+        graph.addEdge(e1, e2);
+        graph.addEdge(e2, e0);
+        graph.addEdge(e2, e3);
+        graph.addEdge(e3, e3);
         List<Entity> list = graph.depthSearch(e2);
         //expected  2 0 1 3
         boolean eq = list.equals(Arrays.asList(e2, e0, e1, e3));
@@ -261,12 +261,12 @@ public class GraphTest {
         graph.addNode(e2);
         graph.addNode(e3);
 
-        graph.addEdge(e0, e1, 0);
-        graph.addEdge(e0, e2, 0);
-        graph.addEdge(e1, e2, 0);
-        graph.addEdge(e2, e0, 0);
-        graph.addEdge(e2, e3, 0);
-        graph.addEdge(e3, e3, 0);
+        graph.addEdge(e0, e1);
+        graph.addEdge(e0, e2);
+        graph.addEdge(e1, e2);
+        graph.addEdge(e2, e0);
+        graph.addEdge(e2, e3);
+        graph.addEdge(e3, e3);
 
         List<Entity> list = graph.breathSearch(e2);
         //expected 2 0 3 1
@@ -306,13 +306,13 @@ public class GraphTest {
         graph.addNode(A2);
         graph.addNode(A3);
 
-        graph.addEdge(A1, A2, 0);
-        graph.addEdge(A1, B1, 0);
-        graph.addEdge(A1, A3, 0);
+        graph.addEdge(A1, A2);
+        graph.addEdge(A1, B1);
+        graph.addEdge(A1, A3);
 
-        graph.addEdge(A2, A3, 0);
+        graph.addEdge(A2, A3);
 
-        //Following is A1 Topological Sort of the given graph 
+        //Topological Sort of the given graph 
         List<Expr> list = graph.kahnTopSort();
         for (Expr expr : list) {
             System.out.println(expr.toString());

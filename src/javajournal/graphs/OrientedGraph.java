@@ -56,13 +56,13 @@ public class OrientedGraph<T> implements Graph<T> {
     }
 
     @Override
-    public void addEdge(T source, T target, int weight) throws NoSuchNodeException {
+    public void addEdge(T source, T target) throws NoSuchNodeException {
         Node<T> sourceNode = getNode(source);
         Node<T> targetNode = getNode(target);
         if (isNull(sourceNode) || targetNode == null) {
             throw new NoSuchNodeException();
         }
-        Edge<T> edge = new Edge<>(sourceNode, targetNode, weight);
+        Edge<T> edge = new Edge<>(sourceNode, targetNode);
         sourceNode.addEdge(edge);
     }
 
