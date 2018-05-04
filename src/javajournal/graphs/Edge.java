@@ -63,4 +63,11 @@ public class Edge<T> {
         }
         return weight == edge.weight;
     }
+
+    @Override
+    public String toString() {
+        return "(" + source + " -> " + target + ")";
+    }
+    
+    
 }

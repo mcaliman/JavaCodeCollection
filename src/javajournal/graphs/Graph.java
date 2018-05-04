@@ -2,6 +2,7 @@ package javajournal.graphs;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 
 public interface Graph<T> {
 
@@ -13,6 +14,12 @@ public interface Graph<T> {
 
     public void removeNode(T item) throws NoSuchNodeException;
 
+    public List<Edge<T>> edges();
+
+    public List<Edge<T>> incomingEdges(Node v);
+
+    public List<Edge<T>> outgoingEdges(Node v);
+
     public void addEdge(T from, T to, int weight) throws NoSuchNodeException;
 
     public void removeEdge(T from, T to) throws NoSuchNodeException;
@@ -23,5 +30,8 @@ public interface Graph<T> {
 
     public List<T> breathSearch(T start) throws NoSuchNodeException;
 
-    public List<T> topologicalSort() throws NoSuchNodeException;
+    //public List<T> topologicalSort() throws NoSuchNodeException;
+    public List<T> kahnTopSort() throws NoSuchNodeException;
+
+   
 }

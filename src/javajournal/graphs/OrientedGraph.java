@@ -40,7 +40,7 @@ public class OrientedGraph<T> implements Graph<T> {
         Node<T> node = new Node<>(item);
         graph.put(item, node);
     }
-    
+
     @Override
     public void removeNode(T item) throws NoSuchNodeException {
         Node<T> node = getNode(item);
@@ -54,7 +54,7 @@ public class OrientedGraph<T> implements Graph<T> {
         }
         graph.remove(item);
     }
-        
+
     @Override
     public void addEdge(T source, T target, int weight) throws NoSuchNodeException {
         Node<T> sourceNode = getNode(source);
@@ -80,7 +80,7 @@ public class OrientedGraph<T> implements Graph<T> {
 
     @Override
     public List<T> getNeighbors(T item) throws NoSuchNodeException {
-        Node node = getNode(item); 
+        Node node = getNode(item);
         if (isNull(node)) {
             throw new NoSuchNodeException();
         }
@@ -107,11 +107,11 @@ public class OrientedGraph<T> implements Graph<T> {
 
             while (iterator.hasNext()) {
                 neighbor = iterator.next();
-                if (notVisited(neighbor,visited)) {
+                if (notVisited(neighbor, visited)) {
                     break;
                 }
             }
-            if (notVisited(neighbor,visited)) {
+            if (notVisited(neighbor, visited)) {
                 visited.add(neighbor);
                 elements.add(neighbor);
                 stack.push(neighbor);
@@ -122,8 +122,6 @@ public class OrientedGraph<T> implements Graph<T> {
         return elements;
     }
 
-    
-    
     @Override
     public List<T> breathSearch(T start) throws NoSuchNodeException {
         if (noSuchNode(start)) {
@@ -144,7 +142,7 @@ public class OrientedGraph<T> implements Graph<T> {
 
             while (iterator.hasNext()) {
                 neighbor = iterator.next();
-                if (notVisited(neighbor,visited)) {
+                if (notVisited(neighbor, visited)) {
                     visited.add(neighbor);
                     elements.add(neighbor);
                     queue.add(neighbor);
@@ -154,62 +152,102 @@ public class OrientedGraph<T> implements Graph<T> {
         return elements;
     }
 
-    private boolean notVisited(T node,Collection<T> visited){
+    private boolean notVisited(T node, Collection<T> visited) {
         return nonNull(node) && !visited.contains(node);
+    }
+
+    //distruttiva, usare copia di graph
+    @Override
+    public List<T> kahnTopSort() throws NoSuchNodeException {
+        List<T> result = new ArrayList<>();
+        Queue<Node> queue = new ArrayDeque<Node>() ;
+        Collection<Node<T>> vertices = this.graph.values();
+        for (Node<T> v : vertices) {
+            
+            if (hasNoIncoimingEdges(v)) {
+                queue.add(v);
+            }
+        }
+        while (!queue.isEmpty()) {
+            Node v = queue.poll();
+            //result.push(v);
+            result.add((T)v.value());
+            System.out.println("push: "+v.value());
+            List<Edge<T>> outgoingEdges = outgoingEdges(v);
+            for (Edge e : outgoingEdges) {
+                Node<T> s = e.getSource();
+                Node<T> t = e.getTarget();
+                this.removeEdge(s.value(), t.value());
+                Node endV = e.getTarget();
+                if (hasNoIncoimingEdges(endV)) {
+                    //System.out.println("pushI: "+endV.value());
+                    queue.add(endV);
+                }
+            }
+        }
+        if (hasEdges(graph)) {
+            //return error;
+        }
+
+        return result;
+    }
+    
+  
+    private boolean hasNoIncoimingEdges(Node<T> v) {
+        return incomingEdges(v).size()==0;
+    }
+
+    private Collection<Node<T>> nodes() {
+        return this.graph.values();
+    }
+
+    @Override
+    public List<Edge<T>> edges() {
+        List<Edge<T>> results = new ArrayList<>();
+        Collection<Node<T>> nodes = nodes();
+        for (Node<T> node : nodes) {
+            List<Edge<T>> egdes = node.edges();
+            results.addAll(egdes);
+        }
+        return results;
+    }
+
+    @Override
+    public List<Edge<T>> incomingEdges(Node v) {
+        List<Edge<T>> incomingEdges = new ArrayList<>();
+        List<Edge<T>> edges = this.edges();
+        for (Edge<T> edge : edges) {
+            if (edge.getTarget().equals(v)) {
+                incomingEdges.add(edge);
+            }
+        }
+        return incomingEdges;
     }
     
     @Override
-    public List<T> topologicalSort() throws NoSuchNodeException {
-        Iterator<T> iterator = this.graph.keySet().iterator();
-        Collection<T> visited = new ArrayList<>();
-        List<T> elements = new ArrayList<>();
-
-        Stack<T> stack = new Stack<>();
-
-        while (iterator.hasNext()) {
-            T next = iterator.next();
-            //visited.add(next);
-            //ordered.add(next);
-            if (!visited.contains(next)) {
-                topologicalSortUtil(next, visited, stack);
+    public List<Edge<T>> outgoingEdges(Node v) {
+        List<Edge<T>> outgoingEdges = new ArrayList<>();
+        List<Edge<T>> edges = this.edges();
+        for (Edge<T> edge : edges) {
+            if (edge.getSource().equals(v)) {
+                outgoingEdges.add(edge);
             }
         }
-
-        while (!stack.isEmpty()) {
-            T el = stack.pop();
-            elements.add(el);
-            System.out.println("topsearch " + el + " ");
-        }
-
-        return elements;
+        return outgoingEdges;
     }
 
-    void topologicalSortUtil(T next, Collection<T> visited, Stack stack) throws NoSuchNodeException {
-        // Mark the current getNode as visited.
+  
 
-        visited.add(next);
-        T i;
-
-        // Recur for all the vertices adjacent to this
-        // vertex
-        List<T> list = this.getNeighbors(next);
-        Iterator<T> it = list.iterator();
-        while (it.hasNext()) {
-            i = it.next();
-            if (!visited.contains(i)) {
-                topologicalSortUtil(i, visited, stack);
-            }
-        }
-
-        // Push current vertex to stack which stores result
-        stack.push(next);
+    private Node<T> getNode(T item) {
+        return graph.get(item);
     }
 
-    
-    private Node<T> getNode(T item){
-         return graph.get(item);
-    }
-    private boolean noSuchNode(T item){
+    private boolean noSuchNode(T item) {
         return getNode(item) == null;
     }
+
+    private boolean hasEdges(HashMap<T, Node<T>> graph) {
+        return false;
+    }
+
 }

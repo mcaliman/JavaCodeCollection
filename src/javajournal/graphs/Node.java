@@ -25,6 +25,10 @@ public class Node<T> implements Iterable<Node<T>> {
         return null;
     }
 
+    public List<Edge<T>> edges(){
+        return this.neighbors;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -95,4 +99,11 @@ public class Node<T> implements Iterable<Node<T>> {
     public T value() {
         return data;
     }
+
+    @Override
+    public String toString() {
+        return "{"+ data + "}";
+    }
+    
+    
 }

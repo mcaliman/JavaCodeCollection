@@ -2,7 +2,9 @@ package javajournal.graphs;
 
 import java.util.Arrays;
 import java.util.Collection;
+import static java.util.Collections.list;
 import java.util.List;
+import java.util.Stack;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,23 +36,6 @@ public class GraphTest {
         @Override
         public String toString() {
             return id.toString();
-        }
-
-    }
-
-    private class Expr {
-
-        private String lvalue;
-        private String rvalue;
-
-        public Expr(String lvalue, String rvalue) {
-            this.lvalue = lvalue;
-            this.rvalue = rvalue;
-        }
-
-        @Override
-        public String toString() {
-            return lvalue + " = " + rvalue;
         }
 
     }
@@ -115,6 +100,83 @@ public class GraphTest {
         assertEquals(true, graph.contains(a));
         graph.removeNode(a);
         assertEquals(false, graph.contains(a));
+    }
+
+    @Test
+    public void testEdges() throws Exception {
+        System.out.println("edges");
+        Entity a = new Entity(1);
+        Entity b = new Entity(2);
+        Entity c = new Entity(3);
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addNode(a);
+        graph.addNode(b);
+        graph.addNode(c);
+        graph.addEdge(a, b, 0);
+        graph.addEdge(a, c, 0);
+        List<Edge<Entity>> edges = graph.edges();
+        for (Edge<Entity> edge : edges) {
+            System.out.println(edge);
+        }
+        boolean containsAll = edges.containsAll(Arrays.asList(
+                new Edge<Entity>(new Node(a), new Node(b), 0),
+                new Edge<Entity>(new Node(a), new Node(c), 0)
+        )
+        );
+        assertEquals(true, containsAll);
+
+    }
+
+    @Test
+    public void testIncomingEdges() throws NoSuchNodeException {
+        System.out.println("incomingEdges");
+        Entity e0 = new Entity(0);
+        Entity e1 = new Entity(1);
+        Entity e2 = new Entity(2);
+        Entity e3 = new Entity(3);
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addNode(e0);
+        graph.addNode(e1);
+        graph.addNode(e2);
+        graph.addNode(e3);
+        graph.addEdge(e1, e2, 0);
+        graph.addEdge(e1, e3, 0);
+        graph.addEdge(e0, e1, 0);
+        List<Edge<Entity>> edges = graph.incomingEdges(new Node(e1));
+        for (Edge<Entity> edge : edges) {
+            System.out.println(edge);
+        }
+        boolean containsAll = edges.containsAll(Arrays.asList(
+                new Edge<Entity>(new Node(e0), new Node(e1), 0)
+        )
+        );
+        assertEquals(true, containsAll);
+    }
+
+    @Test
+    public void testOutgoingEdges() throws NoSuchNodeException {
+        System.out.println("outgoingEdges");
+        Entity e0 = new Entity(0);
+        Entity e1 = new Entity(1);
+        Entity e2 = new Entity(2);
+        Entity e3 = new Entity(3);
+        Graph<Entity> graph = new OrientedGraph<>();
+        graph.addNode(e0);
+        graph.addNode(e1);
+        graph.addNode(e2);
+        graph.addNode(e3);
+        graph.addEdge(e1, e2, 0);
+        graph.addEdge(e1, e3, 0);
+        graph.addEdge(e0, e1, 0);
+        List<Edge<Entity>> edges = graph.outgoingEdges(new Node(e1));
+        for (Edge<Entity> edge : edges) {
+            System.out.println(edge);
+        }
+        boolean containsAll = edges.containsAll(Arrays.asList(new Edge<Entity>(new Node(e1), new Node(e2), 0),
+                new Edge<Entity>(new Node(e1), new Node(e3), 0)
+        )
+        );
+        assertEquals(true, containsAll);
     }
 
     @Test
@@ -213,38 +275,51 @@ public class GraphTest {
 
     }
 
-    //FIX!
-    //@Test
-    public void testTopologicalSort() throws Exception {
-        System.out.println("topologicalSort");
-        Entity e0 = new Entity(0);
-        Entity e1 = new Entity(1);
-        Entity e2 = new Entity(2);
-        Entity e3 = new Entity(3);
-        Entity e4 = new Entity(4);
-        Entity e5 = new Entity(5);
-        Graph<Entity> graph = new OrientedGraph<>();
-        graph.addNode(e0);
-        graph.addNode(e1);
-        graph.addNode(e2);
-        graph.addNode(e3);
-        graph.addNode(e4);
-        graph.addNode(e5);
+ 
+    private class Expr {
 
-        graph.addEdge(e5, e2, 0);
-        graph.addEdge(e5, e0, 0);
-        graph.addEdge(e4, e0, 0);
-        graph.addEdge(e4, e1, 0);
-        graph.addEdge(e2, e3, 0);
-        graph.addEdge(e3, e1, 0);
+        private String lvalue;
+        private String rvalue;
 
-        //Following is a Topological Sort of the given graph 5 4 2 3 1 0
-        List<Entity> list = graph.topologicalSort();
-        for (Entity entity : list) {
-            System.out.print(entity.toString()+" > ");
+        public Expr(String lvalue, String rvalue) {
+            this.lvalue = lvalue;
+            this.rvalue = rvalue;
         }
-        
-        boolean eq = list.equals(Arrays.asList(e5, e4, e2, e3, e1, e0));
+
+        @Override
+        public String toString() {
+            return lvalue + " = " + rvalue;
+        }
+
+    }
+
+    @Test
+    public void testKahnTopSort() throws Exception {
+        System.out.println("topologicalSort");
+        Expr B1 = new Expr("B1", "A1");
+        Expr A1 = new Expr("A1", "10");
+        Expr A2 = new Expr("A2", "A1 + 2");
+        Expr A3 = new Expr("A3", "A1 + A2");
+        Graph<Expr> graph = new OrientedGraph<>();
+        graph.addNode(B1);
+        graph.addNode(A1);
+        graph.addNode(A2);
+        graph.addNode(A3);
+
+        graph.addEdge(A1, A2, 0);
+        graph.addEdge(A1, B1, 0);
+        graph.addEdge(A1, A3, 0);
+
+        graph.addEdge(A2, A3, 0);
+
+        //Following is A1 Topological Sort of the given graph 
+        List<Expr> list = graph.kahnTopSort();
+        for (Expr expr : list) {
+            System.out.println(expr.toString());
+        }
+        List<Expr> exp = Arrays.asList(A1, A2, B1, A3);
+        boolean eq = list.equals(exp);
         assertEquals(true, eq);
     }
+
 }
