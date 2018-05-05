@@ -201,7 +201,7 @@ public class DirectedGraph<T> implements Graph<T> {
     }
 
     private boolean hasNoIncoimingEdges(Node<T> v) {
-        return incomingEdges(v).size() == 0;
+        return incomingEdges(v).isEmpty();
     }
 
     private Collection<Node<T>> nodes() {
@@ -212,10 +212,9 @@ public class DirectedGraph<T> implements Graph<T> {
     public List<Edge<T>> edges() {
         List<Edge<T>> results = new ArrayList<>();
         Collection<Node<T>> nodes = nodes();
-        for (Node<T> node : nodes) {
-            List<Edge<T>> egdes = node.edges();
+        nodes.stream().map((node) -> node.edges()).forEachOrdered((egdes) -> {
             results.addAll(egdes);
-        }
+        });
         return results;
     }
 
