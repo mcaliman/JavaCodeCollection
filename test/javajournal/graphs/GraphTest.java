@@ -1,5 +1,10 @@
 package javajournal.graphs;
 
+import com.trueprogramming.graphs.Graph;
+import com.trueprogramming.graphs.DirectedGraph;
+import com.trueprogramming.graphs.Edge;
+import com.trueprogramming.graphs.NoSuchNodeException;
+import com.trueprogramming.graphs.Node;
 import java.util.Arrays;
 import java.util.Collection;
 import static java.util.Collections.list;

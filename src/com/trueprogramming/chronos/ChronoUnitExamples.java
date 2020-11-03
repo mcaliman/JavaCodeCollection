@@ -1,4 +1,4 @@
-package javajournal.chronos;
+package com.trueprogramming.chronos;
 
 import java.time.Instant;
 import java.time.LocalDate;

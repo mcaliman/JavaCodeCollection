@@ -1,4 +1,4 @@
-package javajournal.streams;
+package com.trueprogramming.streams;
 
 import java.util.Comparator;
 import java.util.Optional;

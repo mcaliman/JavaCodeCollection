@@ -1,4 +1,4 @@
-package javajournal.immutable;
+package com.trueprogramming.immutable;
 
 public class Mutable {
 
